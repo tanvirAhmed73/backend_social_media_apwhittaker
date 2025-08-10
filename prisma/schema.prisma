@@ -1,0 +1,73 @@
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearchPostgres"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model User{
+  id                        String  @id @default(cuid())
+  name                      String
+  phoneNumber               String
+  email                     String
+  gender                    String?
+  starSeedOrigin            String?
+  galasticMission           String?
+  about                     String?
+  password                  String
+  age                       String?
+  location                  String?
+  accountStatus             Boolean @default(false)
+
+  createdAt                DateTime @default(now())
+  deletedAt                DateTime? @default(now())
+  updatedAt                DateTime @default(now())
+
+  interest  UserInterest[]
+  ucode     Ucode[]
+
+  @@map("users")
+}
+
+model UserInterest{
+  @@id([userId, interestId])
+
+  userId           String
+  interestId       String
+
+  user       User         @relation(fields: [userId], references: [id])
+  interest   Interest     @relation(fields: [interestId], references: [id])
+
+}
+
+model Interest{
+  id                        String  @id @default(cuid())
+  interestItem              String
+
+  createdAt                DateTime   @default(now())
+  updatedAt                DateTime   @default(now())
+  deltedAt                 DateTime?  @default(now())
+
+  user  UserInterest[]
+}
+
+
+model Ucode{
+  id                        String @id @default(cuid())
+  userId                    String 
+  email                     String
+  otp                       String
+  expireAt                  DateTime
+
+  createdAt                 DateTime @default(now())
+  updatedAt                 DateTime @default(now())
+
+  user    User @relation(fields: [userId], references: [id])
+
+  @@map("ucodes")
+}
