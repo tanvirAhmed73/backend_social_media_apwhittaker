@@ -14,7 +14,7 @@ model User{
   id                        String  @id @default(cuid())
   name                      String
   phoneNumber               String
-  email                     String
+  email                     String  
   gender                    String?
   starSeedOrigin            String?
   galasticMission           String?
@@ -67,7 +67,7 @@ model Ucode{
   createdAt                 DateTime @default(now())
   updatedAt                 DateTime @default(now())
 
-  user    User @relation(fields: [userId], references: [id])
+  user    User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("ucodes")
 }

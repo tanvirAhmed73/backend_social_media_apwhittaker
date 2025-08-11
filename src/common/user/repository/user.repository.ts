@@ -12,12 +12,8 @@ export class UserRepository{
                 [field] : value
             }
         })
-        
-        if(isExist){
-            throw new HttpException("Email Already Exist", HttpStatus.CONFLICT)
-        }
 
-        return false;
+        return isExist? true : false;
     }
 
     // saved user in the database
