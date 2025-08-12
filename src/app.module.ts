@@ -1,4 +1,4 @@
-import { Global, Logger, Module } from '@nestjs/common';
+import { Global, Logger, Module, Options } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
@@ -6,6 +6,9 @@ import { AuthModule } from './modules/auth/auth.module';
 import { MailModule } from './mail/mail.module';
 import appConfig from './config/app.config';
 import { BullModule } from '@nestjs/bullmq';
+import { LocalStrategy } from './modules/auth/strategy/local.strategy';
+import { RedisModule } from '@nestjs-modules/ioredis';
+import { single } from 'rxjs';
 
 
 @Module({
@@ -23,10 +26,19 @@ import { BullModule } from '@nestjs/bullmq';
         password: appConfig().redis.password
       }
     }),
+    RedisModule.forRoot({
+      type:"single",
+      options:{
+        host: appConfig().redis.host,
+        password: appConfig().redis.password,
+        port: +(appConfig().redis.port || 6379),
+      }
+    })
+    ,
     AuthModule,
     MailModule
   ],
-  providers: [AppService, 
+  providers: [AppService,
     {
       provide: Logger,
       useValue: new Logger()

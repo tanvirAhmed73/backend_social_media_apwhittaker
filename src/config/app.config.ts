@@ -19,5 +19,10 @@ export default () => ({
         port:process.env.EMAIL_PORT,
         username:process.env.EMAIL_USERNAME,
         password:process.env.EMAIL_PASSWORD
+    },
+
+    jwt:{
+        secret: process.env.JWT_SECRET,
+        expiry: process.env.JWT_EXPIRY
     }
 })
