@@ -19,6 +19,26 @@ export class AuthService {
     @InjectRedis() private readonly redis:Redis
   ){}
 
+  async getLoggedInUserDetails(userId){
+    try {
+      const userData = await UserRepository.getUserDetails(userId);
+      if(!userData){
+        throw new HttpException('User Not Found',HttpStatus.NOT_FOUND)
+      }
+      return{
+        status: 200,
+        success: true,
+        message: "User Fetch Successfully!",
+        data: userData
+      }
+    } catch (error) {
+      if(error instanceof HttpException){
+        throw error
+      }
+      throw new HttpException('Internal Server Error', HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+  }
+
   async createUser(data) {
     const {email} = data
 
@@ -131,9 +151,9 @@ export class AuthService {
 
   async login(userId, email,){
     try {
-      const isActiveAccount = await UserRepository.isAccountActive(userId);
+      const userDetails = await UserRepository.getUserDetails(userId);
 
-      if(!isActiveAccount){
+      if(!userDetails || !userDetails.accountStatus){
         Logger.error(`Account is not Active`)
         throw new HttpException('First Verify Your Email Address!', HttpStatus.FORBIDDEN)
       }
@@ -150,6 +170,7 @@ export class AuthService {
         60 * 60 * 24 * 7
       )
       Logger.log(`Refresh token save successfully in the redis ${redisSved}`)
+
       return {
         status: 200,
         success: true,
@@ -158,8 +179,8 @@ export class AuthService {
           type: 'bearer',
           access_Token: accessToken,
           refresh_Token: refreshToken
-        }
-
+        },
+        data: userDetails
       }
       
     } catch (error) {
@@ -205,4 +226,6 @@ export class AuthService {
       throw new HttpException('Internal Server Error', HttpStatus.INTERNAL_SERVER_ERROR)
     }
   }
+
+
 }

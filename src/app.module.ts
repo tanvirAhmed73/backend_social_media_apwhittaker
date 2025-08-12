@@ -9,6 +9,7 @@ import { BullModule } from '@nestjs/bullmq';
 import { LocalStrategy } from './modules/auth/strategy/local.strategy';
 import { RedisModule } from '@nestjs-modules/ioredis';
 import { single } from 'rxjs';
+import { UserProfileModule } from './modules/user-profile/user-profile.module';
 
 
 @Module({
@@ -36,7 +37,8 @@ import { single } from 'rxjs';
     })
     ,
     AuthModule,
-    MailModule
+    MailModule,
+    UserProfileModule
   ],
   providers: [AppService,
     {

@@ -52,20 +52,18 @@ export class UserRepository{
     }
 
 
-    static async isAccountActive(userId){
-      const isActive = await prisma.user.findFirst({
+    static async getUserDetails(userId){
+      const details = await prisma.user.findFirst({
         where:{
-            AND:[
-                {
-                    id: userId
-                },
-                {
-                    accountStatus: true
-                }
-            ]
+                id: userId
         }
       })  
+      if (!details) {
+            return null;
+        }
+
+      const {password:_, ...userDataWithoutPassword} = details
       
-      return isActive ? true : false
+      return details ? userDataWithoutPassword : null
     }
 }
