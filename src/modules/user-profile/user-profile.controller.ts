@@ -43,7 +43,6 @@ export class UserProfileController {
   }))
   async updateProfile(@Body() data:UpdateUserProfileDto ,@Req() req:Request, @UploadedFiles() images:Array<Express.Multer.File>){
     const userId = req.user.userId
-    console.log(data)
     const response = await this.userProfileService.updateProfile(userId, data, images)
     return response
   }  
