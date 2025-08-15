@@ -46,4 +46,26 @@ export class UserProfileController {
     const response = await this.userProfileService.updateProfile(userId, data, images)
     return response
   }  
+
+
+  @Post('upload-video')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(
+    FilesInterceptor('video', 10, {
+      storage: diskStorage({
+        destination: appConfig().storageUrl.rootUrl + appConfig().storageUrl.videos,
+        filename: (req, file, cb)=>{
+          const randomName = Array(32).fill(null).map(()=>Math.round(Math.random() * 16).toString()).join('');
+          return cb(null, `${randomName}${file.originalname}`)
+        }
+      })
+    })
+  )
+  async uploadVideo(@Req() req:Request, @UploadedFiles() videos:Array<Express.Multer.File>){
+    const userId = req.user.userId;
+    const reponse = await this.userProfileService.uploadVideo(userId, videos)
+    return reponse
+  }
+
+  
 }

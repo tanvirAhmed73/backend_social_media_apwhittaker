@@ -11,4 +11,8 @@ export class FileService{
     static generateImageUrl(fileName: string): string {
     return `${appConfig().app.backEndUrl}${appConfig().storageUrl.rootUrlPublic}${appConfig().storageUrl.pictures}/${fileName}`;
   }
+    
+  static generateVideoUrl(fileName: string): string {
+    return `${appConfig().app.backEndUrl}${appConfig().storageUrl.rootUrlPublic}${appConfig().storageUrl.videos}/${fileName}`;
+  }
 }

@@ -32,6 +32,7 @@ model User{
   interest  UserInterest[]
   ucode     Ucode[]
   images    Images[]
+  videos    Videos[]
 
   @@map("users")
 }
@@ -66,6 +67,14 @@ model Images{
   user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+
+model Videos{
+  id                        String @id @default(cuid())
+  userId                    String
+  videofile                 String
+
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
 
 model Ucode{
   id                        String @id @default(cuid())

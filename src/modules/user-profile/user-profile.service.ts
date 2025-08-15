@@ -187,6 +187,35 @@ export class UserProfileService {
 }
 
 
+  async uploadVideo(userId, videos){
+    try {
+      let videosPath: string[] = []
+      const videoPromises = videos.map(async (video)=>{
+          const savedVideo = await prisma.videos.create({
+            data:{
+              userId: userId,
+              videofile: video.filename 
+            }
+          })
+          videosPath.push(FileService.generateVideoUrl(video.filename))
+      })
+      // Wait for all promises to resolve
+      await Promise.all(videoPromises);
+      return{
+        status: 200,
+        success: true,
+        message: 'upload video successfully',
+        data: videosPath
+      }
+    } catch (error) {
+      if(error instanceof HttpException){
+        throw error
+      }
+      throw new HttpException('Internal Server Error', HttpStatus.INTERNAL_SERVER_ERROR)
+
+    }
+  }
+
 
 
 }

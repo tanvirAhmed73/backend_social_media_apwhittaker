@@ -31,6 +31,7 @@ export default () => ({
         rootUrl: './public/storage',
         rootUrlPublic: '/public/storage',
         avatar: '/avatar',
+        videos: '/videos',
         pictures: '/pictures'
     }
 })
