@@ -23,6 +23,7 @@ model User{
   age                       String?
   location                  String?
   accountStatus             Boolean @default(false)
+  avatar                    String?
 
   createdAt                DateTime @default(now())
   deletedAt                DateTime? @default(now())
@@ -30,6 +31,7 @@ model User{
 
   interest  UserInterest[]
   ucode     Ucode[]
+  images    Images[]
 
   @@map("users")
 }
@@ -47,13 +49,21 @@ model UserInterest{
 
 model Interest{
   id                        String  @id @default(cuid())
-  interestItem              String
+  interestItem              String  @unique
 
   createdAt                DateTime   @default(now())
   updatedAt                DateTime   @default(now())
   deltedAt                 DateTime?  @default(now())
 
   user  UserInterest[]
+}
+
+model Images{
+  id                        String @id @default(cuid())
+  userId                    String
+  imagefile                 String
+
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 

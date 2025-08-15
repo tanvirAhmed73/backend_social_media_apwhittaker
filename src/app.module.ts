@@ -1,15 +1,14 @@
-import { Global, Logger, Module, Options } from '@nestjs/common';
-import { AppController } from './app.controller';
+import {  Logger, Module } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './modules/auth/auth.module';
 import { MailModule } from './mail/mail.module';
 import appConfig from './config/app.config';
 import { BullModule } from '@nestjs/bullmq';
-import { LocalStrategy } from './modules/auth/strategy/local.strategy';
 import { RedisModule } from '@nestjs-modules/ioredis';
-import { single } from 'rxjs';
 import { UserProfileModule } from './modules/user-profile/user-profile.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 
 @Module({
@@ -20,6 +19,13 @@ import { UserProfileModule } from './modules/user-profile/user-profile.module';
         load:[appConfig]
       }
     ),
+    
+    // Serve static files from 'public' and 'public/storage'
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),  // root path where static files reside
+      serveRoot: '/public',                       // URL prefix to serve static assets
+    }),
+    
     BullModule.forRoot({
       connection:{
         host: appConfig().redis.host,
@@ -27,6 +33,7 @@ import { UserProfileModule } from './modules/user-profile/user-profile.module';
         password: appConfig().redis.password
       }
     }),
+
     RedisModule.forRoot({
       type:"single",
       options:{
@@ -40,6 +47,7 @@ import { UserProfileModule } from './modules/user-profile/user-profile.module';
     MailModule,
     UserProfileModule
   ],
+
   providers: [AppService,
     {
       provide: Logger,

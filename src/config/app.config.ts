@@ -2,7 +2,8 @@ export default () => ({
     // APP Details
     app : {
         name:process.env.APP_NAME,
-        description:process.env.APP_DESCRIPTION
+        description:process.env.APP_DESCRIPTION,
+        backEndUrl:process.env.BACKEND_URL
     },
 
     // REDIS
@@ -24,5 +25,12 @@ export default () => ({
     jwt:{
         secret: process.env.JWT_SECRET,
         expiry: process.env.JWT_EXPIRY
+    },
+
+    storageUrl:{
+        rootUrl: './public/storage',
+        rootUrlPublic: '/public/storage',
+        avatar: '/avatar',
+        pictures: '/pictures'
     }
 })
