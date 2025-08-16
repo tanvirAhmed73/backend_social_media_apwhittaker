@@ -152,7 +152,7 @@ export class UserProfileService {
       let imagespath:string[] = []
       if (images && images.length > 0) {
         const imagePromises = images.map((file) => {
-          imagespath.push(FileService.generateImageUrl(file.fileName))
+          imagespath.push(FileService.generateImageUrl(file.filename))
           return prisma.images.create({
             data: {
               userId: userId,
